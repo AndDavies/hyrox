@@ -3,7 +3,6 @@
 
 import { useState, useEffect } from "react"
 import { Input } from "@/components/ui/input"
-import { Card } from "@/components/ui/card" // hypothetical usage of shadcn/ui
 import { useDebounce } from "../hooks/useDebounce"
 
 interface Gym {
