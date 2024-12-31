@@ -46,7 +46,7 @@ export default async function HomePage({
   }
 
   // 4) Fetch gyms + total count
-  const { data: gyms, error: gymsError, count } = await supabase
+  const { data: gyms, error: gymsError } = await supabase
     .from("gyms")
     .select("id, store, address, thumb, city, country", { count: "exact" })
     .range(from, to)
