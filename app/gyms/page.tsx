@@ -1,6 +1,6 @@
 // app/gyms/page.tsx
 import { Metadata } from 'next'
-import ClientSideAutocomplete from './ClientSideAutocomplete'
+import ClientSideAutocomplete from '../components/ClientSideAutocomplete'
 
 // This is a server component
 export const metadata: Metadata = {

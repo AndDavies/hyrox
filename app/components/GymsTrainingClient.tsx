@@ -114,22 +114,12 @@ export default function GymsTrainingClient({
   // -------------------------------------------------------------
   return (
     <section
-      id="gyms"
-      className="
-        py-14 
-        text-center
-        bg-gradient-to-r 
-        from-black 
-        via-blue-800
-        to-black 
-        text-white
-      "
-    >
+      id="gyms">
       <div className="max-w-6xl mx-auto px-4">
-        <h2 className="text-3xl sm:text-4xl font-extrabold mb-4 drop-shadow-md">
+        <h2 className="text-3xl text-center text-gray-700 sm:text-4xl font-extrabold mb-4 drop-shadow-md">
           Explore Training Centres
         </h2>
-        <p className="max-w-xl mx-auto mb-8 text-white/90 leading-relaxed">
+        <p className="max-w-xl mx-auto mb-8 text-center text-gray-500 leading-relaxed">
           Browse our curated list of top Hyrox-friendly centres worldwide. Filter by city,
           country, or type in the gym name below.
         </p>

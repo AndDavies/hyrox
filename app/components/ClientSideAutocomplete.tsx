@@ -29,7 +29,7 @@ export default function ClientSideAutocomplete() {
     async function fetchData() {
       setIsLoading(true)
       try {
-        const res = await fetch(`/api/gyms?q=${encodeURIComponent(debouncedQuery)}`)
+        const res = await fetch(`../api/gyms?q=${encodeURIComponent(debouncedQuery)}`)
         const json = await res.json()
         setResults(json.data || [])
       } catch (error) {

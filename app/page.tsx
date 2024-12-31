@@ -5,6 +5,7 @@ import { createClient } from "@supabase/supabase-js"
 import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
 
+
 // Client components for training plans and featured gyms
 import TrainingDirectoryClient from "./components/GymsTrainingClient"
 import TrainingPlansClient from "./components/training-plans-client"
@@ -56,77 +57,87 @@ export default async function HomePage() {
   const countryOptions = Array.from(uniqueCountries).sort()
 
   return (
-    <main className="min-h-screen font-sans text-base bg-black text-white">
+    <main className="min-h-screen font-sans text-base bg-stone-100 text-white">
       {/* Hero Section */}
       <section className="relative w-full overflow-hidden">
-        {/* Background image + overlay */}
-        <div
-          className="absolute inset-0 bg-cover bg-center bg-no-repeat opacity-50"
-          style={{
-            // Make sure /hyrox_hero_background.jpg is in /public folder
-            backgroundImage: "url('/hyrox_hero_background.jpg')",
-          }}
-        />
-        <div className="absolute inset-0 bg-gradient-to-r from-cyan-500 via-pink-400 to-cyan-500 opacity-60" />
+  {/* Background image */}
+  <div
+    className="absolute inset-0 bg-cover bg-center bg-no-repeat"
+    style={{
+      backgroundImage: "url('/hyrox_hero_background.jpeg')",
+    }}
+  />
+  {/* Overlay with slightly lower opacity */}
+  <div className="absolute inset-0 bg-black/60" />
 
-        {/* Hero Content */}
-        <div className="relative z-10 flex flex-col items-center justify-center min-h-[80vh] px-6 py-16 text-center">
-          <h1 className="text-5xl sm:text-6xl md:text-7xl font-extrabold tracking-tight drop-shadow-sm mb-4">
-            Find Your Perfect Hyrox Training Plan
-          </h1>
-          <p className="max-w-2xl mx-auto mb-8 text-lg sm:text-xl md:text-2xl font-medium leading-relaxed">
-            We’ve reviewed 40+ Hyrox workout programs so you don’t have to. Save
-            hours of research and choose the right plan for you.
-          </p>
+  {/* Hero Content */}
+  <div className="relative z-10 flex flex-col items-center justify-center min-h-[70vh] px-6 py-12 text-center">
+    <h1 className="
+      text-5xl 
+      sm:text-6xl 
+      md:text-7xl 
+      font-extrabold 
+      leading-tight 
+      tracking-tight 
+      drop-shadow-lg 
+      mb-4
+    ">
+      Find Your Perfect Hyrox Training Plan
+    </h1>
 
-          {/* Mailing List Form (shadcn/ui Input & Button) */}
-          <div className="flex flex-col sm:flex-row items-center gap-3 sm:gap-4">
-            <Input
-              type="email"
-              placeholder="you@example.com"
-              className="w-full sm:w-auto sm:min-w-[280px]"
-            />
-            <Button
-              className="bg-green-300 text-black hover:bg-green-200 transition font-semibold"
-            >
-              Subscribe →
-            </Button>
-          </div>
+    <p className="max-w-2xl mx-auto mb-8 text-lg sm:text-xl md:text-2xl font-medium leading-snug">
+      We’ve reviewed 40+ Hyrox workout programs so you don’t have to. 
+      Save hours of research and choose the right plan for you.
+    </p>
 
-          {/* Navigation Buttons */}
-          <div className="flex flex-wrap justify-center gap-4 mt-10">
-            <a
-              href="#gyms"
-              className="px-5 py-2 rounded-full bg-pink-400 text-black font-bold hover:bg-pink-300 transition"
-            >
-              Gyms
-            </a>
-            <a
-              href="#training-programs"
-              className="px-5 py-2 rounded-full bg-cyan-500 text-black font-bold hover:bg-cyan-400 transition"
-            >
-              Training Programs
-            </a>
-            <a
-              href="#events"
-              className="px-5 py-2 rounded-full bg-blue-800 text-white font-bold hover:bg-blue-700 transition"
-            >
-              Events
-            </a>
-            <a
-              href="#blog"
-              className="px-5 py-2 rounded-full bg-green-300 text-black font-bold hover:bg-green-200 transition"
-            >
-              Blog
-            </a>
-          </div>
-        </div>
-      </section>
+    {/* Mailing List Form (shadcn/ui Input & Button) */}
+    <div className="flex flex-col sm:flex-row items-center gap-3 sm:gap-4">
+      <Input
+        type="email"
+        placeholder="you@example.com"
+        className="w-full sm:w-auto sm:min-w-[280px]"
+      />
+      <Button
+        className="bg-green-300 text-black hover:bg-green-200 transition font-semibold"
+      >
+        Subscribe →
+      </Button>
+    </div>
+
+    {/* Navigation Buttons */}
+    <div className="flex flex-wrap justify-center gap-4 mt-10">
+      <a
+        href="#gyms"
+        className="px-5 py-2 rounded-full bg-pink-400 text-black font-bold hover:bg-pink-300 transition"
+      >
+        Gyms
+      </a>
+      <a
+        href="#training-programs"
+        className="px-5 py-2 rounded-full bg-cyan-500 text-black font-bold hover:bg-cyan-400 transition"
+      >
+        Training Programs
+      </a>
+      <a
+        href="#events"
+        className="px-5 py-2 rounded-full bg-blue-800 text-white font-bold hover:bg-blue-700 transition"
+      >
+        Events
+      </a>
+      <a
+        href="#blog"
+        className="px-5 py-2 rounded-full bg-green-300 text-black font-bold hover:bg-green-200 transition"
+      >
+        Blog
+      </a>
+    </div>
+  </div>
+</section>
 
       {/* Training Plans Section */}
       <section
         id="training-programs"
-        className="px-6 py-12 md:px-12 md:py-16 bg-gradient-to-r from-black via-blue-800 to-black"
+        className="px-6 py-12 md:px-12 md:py-16 "
       >
         <TrainingPlansClient allPlans={plans ?? []} />
       </section>
@@ -134,16 +145,15 @@ export default async function HomePage() {
       {/* Featured Gyms Section */}
       <section
         id="gyms"
-        className="px-6 py-12 md:px-12 md:py-16 bg-black"
+        className=" "
       >
-        <h2 className="text-3xl font-bold mb-6 text-center">
-          Featured Gyms Around The World
-        </h2>
+
         {/*
           Render a smaller subset of gyms (20 max).
           We'll still pass them to your existing "GymsTrainingClient" 
           if you want to reuse that UI. Or you can build a simpler display.
         */}
+
         <TrainingDirectoryClient
           allGyms={featuredGyms ?? []}
           cityOptions={cityOptions}

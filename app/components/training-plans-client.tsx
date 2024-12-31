@@ -113,22 +113,12 @@ export default function TrainingPlansClient({ allPlans }: TrainingPlansClientPro
 
   return (
     <section
-      id="training-programs"
-      className="
-        py-14 
-        text-center 
-        bg-gradient-to-r 
-        from-black 
-        via-pink-400 
-        to-cyan-500 
-        text-white
-      "
-    >
+      id="gyms">
       <div className="max-w-6xl mx-auto px-4">
-        <h2 className="text-3xl sm:text-4xl font-extrabold mb-3 drop-shadow-md">
+        <h2 className="text-3xl text-gray-700 text-center sm:text-4xl font-extrabold mb-3 drop-shadow-md">
           Browse Training Plans
         </h2>
-        <p className="max-w-xl mx-auto mb-8 text-white/90 leading-relaxed">
+        <p className="max-w-xl mx-auto mb-8 text-center text-gray-500 leading-relaxed">
           Check out top-rated Hyrox training plans from beginner to advanced levels.
         </p>
 
