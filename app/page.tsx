@@ -66,7 +66,6 @@ export default async function HomePage({
   const cityOptions = Array.from(uniqueCities).sort()
   const countryOptions = Array.from(uniqueCountries).sort()
 
-  const totalCount = count ?? 0
 
   return (
     <main className="min-h-screen font-sans text-base bg-black text-white">

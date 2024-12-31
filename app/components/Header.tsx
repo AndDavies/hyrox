@@ -1,9 +1,6 @@
 // app/components/Header.tsx
-
 import Link from "next/link"
 import Image from "next/image"
-
-// Using shadcn/ui Button for your CTA
 import { Button } from "@/components/ui/button"
 
 export default function Header() {
@@ -50,6 +47,7 @@ export default function Header() {
                 border-white text-white
                 hover:bg-white hover:text-black
                 rounded-full px-4 py-1
+                transition
               "
             >
               Get Started
