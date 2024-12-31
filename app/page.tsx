@@ -42,7 +42,7 @@ export default async function HomePage({
     .order("title")
 
   if (!plans || plansError) {
-    return <div>Failed to load plans</div>
+    return <div>Failed to load planss</div>
   }
 
   // 4) Fetch gyms + total count
