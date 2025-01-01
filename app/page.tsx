@@ -1,9 +1,13 @@
 // app/page.tsx
 
 import { Metadata } from "next"
+import Link from 'next/link';
 import { createClient } from "@supabase/supabase-js"
 import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
+import Footer from "./components/Footer";
+import { Accordion } from "@/components/ui/accordion";
+import FAQSection from "./components/FAQSection";
 
 
 // Client components for training plans and featured gyms
@@ -37,14 +41,15 @@ export default async function HomePage() {
   // 3) Fetch a limited set of gyms (e.g., 20) for homepage
   //    You can choose to .order(...) by store or created_at, or even do random
   const { data: featuredGyms, error: gymsError } = await supabase
-    .from("gyms")
-    .select("id, store, address, thumb, city, country")
-    .order("store")
-    .limit(20)
+  .from("gyms")
+  .select("id, store, address, thumb, city, country, slug") // Include slug here
+  .order("store")
+  .limit(20);
 
-  if (gymsError) {
-    console.error("Featured Gyms fetch error:", gymsError)
-  }
+if (gymsError) {
+  console.error("Featured Gyms fetch error:", gymsError);
+}
+
 
   // 4) Build city/country options from the *featured* gyms (optional)
   const uniqueCities = new Set<string>()
@@ -60,79 +65,82 @@ export default async function HomePage() {
     <main className="min-h-screen font-sans text-base bg-stone-100 text-white">
       {/* Hero Section */}
       <section className="relative w-full overflow-hidden">
-  {/* Background image */}
-  <div
-    className="absolute inset-0 bg-cover bg-center bg-no-repeat"
-    style={{
-      backgroundImage: "url('/hyrox_hero_background.jpeg')",
-    }}
-  />
-  {/* Overlay with slightly lower opacity */}
-  <div className="absolute inset-0 bg-black/60" />
+        {/* Background image */}
+        <div
+          className="absolute inset-0 bg-cover bg-center bg-no-repeat"
+          style={{
+            backgroundImage: "url('/hyrox_hero_background.jpeg')",
+          }}
+        />
+          {/* Overlay with slightly lower opacity */}
+          <div className="absolute inset-0 bg-black/60" />
 
-  {/* Hero Content */}
-  <div className="relative z-10 flex flex-col items-center justify-center min-h-[70vh] px-6 py-12 text-center">
-    <h1 className="
-      text-5xl 
-      sm:text-6xl 
-      md:text-7xl 
-      font-extrabold 
-      leading-tight 
-      tracking-tight 
-      drop-shadow-lg 
-      mb-4
-    ">
-      Find Your Perfect Hyrox Training Plan
-    </h1>
+          {/* Hero Content */}
+          <div className="relative z-10 flex flex-col items-center justify-center min-h-[70vh] px-6 py-12 text-center">
+            <h1 className="
+              text-5xl 
+              sm:text-6xl 
+              md:text-7xl 
+              font-extrabold 
+              leading-tight 
+              tracking-tight 
+              drop-shadow-lg 
+              mb-4
+            ">
+              Find Your Perfect Hyrox Training Plan
+            </h1>
 
-    <p className="max-w-2xl mx-auto mb-8 text-lg sm:text-xl md:text-2xl font-medium leading-snug">
-      We’ve reviewed 40+ Hyrox workout programs so you don’t have to. 
-      Save hours of research and choose the right plan for you.
-    </p>
+            <p className="max-w-2xl mx-auto mb-8 text-lg sm:text-xl md:text-2xl font-medium leading-snug">
+              We’ve reviewed 40+ Hyrox workout programs so you don’t have to. 
+              Save hours of research and choose the right plan for you.
+            </p>
 
-    {/* Mailing List Form (shadcn/ui Input & Button) */}
-    <div className="flex flex-col sm:flex-row items-center gap-3 sm:gap-4">
-      <Input
-        type="email"
-        placeholder="you@example.com"
-        className="w-full sm:w-auto sm:min-w-[280px]"
-      />
-      <Button
-        className="bg-green-300 text-black hover:bg-green-200 transition font-semibold"
-      >
-        Subscribe →
-      </Button>
-    </div>
+            {/* Mailing List Form (shadcn/ui Input & Button) */}
+            <div className="flex flex-col sm:flex-row items-center gap-3 sm:gap-4">
+              <Input
+                type="email"
+                placeholder="you@example.com"
+                className="w-full sm:w-auto sm:min-w-[280px]"
+              />
+              <Button
+                className="bg-green-300 text-black hover:bg-green-200 transition font-semibold"
+              >
+                Subscribe →
+              </Button>
+            </div>
 
-    {/* Navigation Buttons */}
-    <div className="flex flex-wrap justify-center gap-4 mt-10">
-      <a
-        href="#gyms"
-        className="px-5 py-2 rounded-full bg-pink-400 text-black font-bold hover:bg-pink-300 transition"
-      >
-        Gyms
-      </a>
-      <a
-        href="#training-programs"
-        className="px-5 py-2 rounded-full bg-cyan-500 text-black font-bold hover:bg-cyan-400 transition"
-      >
-        Training Programs
-      </a>
-      <a
-        href="#events"
-        className="px-5 py-2 rounded-full bg-blue-800 text-white font-bold hover:bg-blue-700 transition"
-      >
-        Events
-      </a>
-      <a
-        href="#blog"
-        className="px-5 py-2 rounded-full bg-green-300 text-black font-bold hover:bg-green-200 transition"
-      >
-        Blog
-      </a>
-    </div>
-  </div>
-</section>
+            {/* Navigation Buttons */}
+            <div className="flex flex-wrap justify-center gap-4 mt-10">
+              <Link href="/your-path" passHref>
+                <Button variant="secondary">Ghost</Button>
+              </Link>
+              <a
+                href="#gyms"
+                className="px-5 py-2 rounded-full bg-pink-400 text-black font-bold hover:bg-pink-300 transition"
+              >
+                Gyms
+              </a>
+              <a
+                href="#training-programs"
+                className="px-5 py-2 rounded-full bg-cyan-500 text-black font-bold hover:bg-cyan-400 transition"
+              >
+                Training Programs
+              </a>
+              <a
+                href="#events"
+                className="px-5 py-2 rounded-full bg-blue-800 text-white font-bold hover:bg-blue-700 transition"
+              >
+                Events
+              </a>
+              <a
+                href="#blog"
+                className="px-5 py-2 rounded-full bg-green-300 text-black font-bold hover:bg-green-200 transition"
+              >
+                Blog
+              </a>
+            </div>
+          </div>
+        </section>
 
       {/* Training Plans Section */}
       <section
@@ -161,14 +169,20 @@ export default async function HomePage() {
         />
 
         {/* Link to Explore All Gyms */}
-        <div className="text-center mt-8">
+        <div className="text-center mt-8 p-6">
           <a
             href="/gyms" 
-            className="text-sm font-semibold underline hover:text-gray-300"
+            className="font-semibold text-blue-500 hover:text-blue-700 underline"
           >
             Explore all gyms around the world →
           </a>
         </div>
+      </section>
+      <section id="FAQ">
+          <FAQSection />
+      </section>
+      <section id="footer">
+          <Footer />
       </section>
     </main>
   )

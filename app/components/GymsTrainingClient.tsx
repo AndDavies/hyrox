@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect } from "react";
 import Image from "next/image";
+import Link from "next/link";
 
 // shadcn/ui components
 import { Input } from "@/components/ui/input";
@@ -15,7 +16,7 @@ import {
   DropdownMenuSeparator,
 } from "@/components/ui/dropdown-menu";
 
-// Your custom hook for debouncing (already created)
+// Custom hook for debouncing input
 import { useDebounce } from "../hooks/useDebounce";
 
 interface Gym {
@@ -25,51 +26,37 @@ interface Gym {
   city?: string;
   country?: string;
   thumb?: string;
+  slug: string;
 }
 
 interface Props {
-  // You can still pass an initial list of gyms if desired, e.g. for SSR fallback
-  // Or keep it empty if you only want the server fetch
   allGyms: Gym[];
   cityOptions: string[];
   countryOptions: string[];
 }
 
 export default function GymsTrainingClient({
-  allGyms,         // optional initial/fallback data
+  allGyms,
   cityOptions,
   countryOptions,
 }: Props) {
-  // 1) Manage the search query for store name
   const [searchQuery, setSearchQuery] = useState("");
-  const debouncedQuery = useDebounce(searchQuery, 300); // 300ms debounce
-
-  // 2) Manage the server-fetched gyms (based on store name search)
+  const debouncedQuery = useDebounce(searchQuery, 300);
   const [serverGyms, setServerGyms] = useState<Gym[]>(allGyms || []);
-
-  // 3) Local filters: city & country
   const [selectedCity, setSelectedCity] = useState<string | null>(null);
   const [selectedCountry, setSelectedCountry] = useState<string | null>(null);
-
-  // 4) The final, locally filtered array to display
   const [filteredGyms, setFilteredGyms] = useState<Gym[]>([]);
 
-  // -------------------------------------------------------------
-  // A) Fetch gyms from the server whenever `debouncedQuery` changes
-  // -------------------------------------------------------------
   useEffect(() => {
-    // If there's no search query, we might default to `allGyms` or an empty array
     if (!debouncedQuery) {
       setServerGyms(allGyms || []);
       return;
     }
 
-    // Otherwise, fetch from your API route, e.g. /api/gyms?q=...
     async function fetchGyms() {
       try {
         const res = await fetch(`/api/gyms?q=${encodeURIComponent(debouncedQuery)}`);
         const json = await res.json();
-        // Expecting { data: Gym[] } structure from your endpoint
         setServerGyms(json.data || []);
       } catch (err) {
         console.error("Failed to fetch gyms:", err);
@@ -80,11 +67,7 @@ export default function GymsTrainingClient({
     fetchGyms();
   }, [debouncedQuery, allGyms]);
 
-  // -------------------------------------------------------------
-  // B) Locally filter the fetched gyms by selectedCity & selectedCountry
-  // -------------------------------------------------------------
   useEffect(() => {
-    // Start with the server-fetched gyms
     let result = [...serverGyms];
 
     if (selectedCity) {
@@ -98,23 +81,15 @@ export default function GymsTrainingClient({
     setFilteredGyms(result);
   }, [serverGyms, selectedCity, selectedCountry]);
 
-  // -------------------------------------------------------------
-  // C) Reset filters
-  // -------------------------------------------------------------
   const handleResetFilters = () => {
     setSearchQuery("");
     setSelectedCity(null);
     setSelectedCountry(null);
-    // Optionally reset serverGyms to the fallback
     setServerGyms(allGyms || []);
   };
 
-  // -------------------------------------------------------------
-  // Render
-  // -------------------------------------------------------------
   return (
-    <section
-      id="gyms">
+    <section id="gyms">
       <div className="max-w-6xl mx-auto px-4">
         <h2 className="text-3xl text-center text-gray-700 sm:text-4xl font-extrabold mb-4 drop-shadow-md">
           Explore Training Centres
@@ -124,9 +99,7 @@ export default function GymsTrainingClient({
           country, or type in the gym name below.
         </p>
 
-        {/* Top row: Search + Filter + Reset */}
         <div className="flex flex-col sm:flex-row items-center justify-between max-w-2xl mx-auto mb-6 gap-4">
-          {/* Search Input (shadcn/ui) - now uses typeahead from the server */}
           <Input
             type="text"
             value={searchQuery}
@@ -134,10 +107,7 @@ export default function GymsTrainingClient({
             placeholder="Type the gym name..."
             className="flex-1 bg-white text-black"
           />
-
-          {/* Filter + Reset Buttons */}
           <div className="flex items-center space-x-4">
-            {/* Filter Dropdown (shadcn/ui) */}
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <Button
@@ -147,76 +117,57 @@ export default function GymsTrainingClient({
                   Filter ▾
                 </Button>
               </DropdownMenuTrigger>
-
               <DropdownMenuContent
                 align="end"
                 className="w-72 bg-white text-black border-none shadow-lg"
               >
-                {/* City Section */}
                 <DropdownMenuLabel className="text-sm font-semibold text-gray-700">
                   City
                 </DropdownMenuLabel>
                 <div className="flex flex-wrap gap-2 px-3 py-2">
-                  {cityOptions.map((city) => {
-                    const isSelected = selectedCity === city;
-                    return (
-                      <DropdownMenuItem asChild key={city} className="p-0">
-                        <button
-                          onClick={() =>
-                            setSelectedCity((prev) => (prev === city ? null : city))
-                          }
-                          className={`
-                            px-3 py-1 text-sm rounded-full
-                            ${
-                              isSelected
-                                ? "bg-green-300 text-black font-bold"
-                                : "bg-gray-100 hover:bg-gray-200 text-gray-700"
-                            }
-                          `}
-                        >
-                          {city}
-                        </button>
-                      </DropdownMenuItem>
-                    );
-                  })}
+                  {cityOptions.map((city) => (
+                    <DropdownMenuItem asChild key={city}>
+                      <button
+                        onClick={() =>
+                          setSelectedCity((prev) => (prev === city ? null : city))
+                        }
+                        className={`px-3 py-1 text-sm rounded-full ${
+                          selectedCity === city
+                            ? "bg-green-300 text-black font-bold"
+                            : "bg-gray-100 hover:bg-gray-200 text-gray-700"
+                        }`}
+                      >
+                        {city}
+                      </button>
+                    </DropdownMenuItem>
+                  ))}
                 </div>
-
                 <DropdownMenuSeparator className="my-2" />
-
-                {/* Country Section */}
                 <DropdownMenuLabel className="text-sm font-semibold text-gray-700">
                   Country
                 </DropdownMenuLabel>
                 <div className="flex flex-wrap gap-2 px-3 py-2">
-                  {countryOptions.map((country) => {
-                    const isSelected = selectedCountry === country;
-                    return (
-                      <DropdownMenuItem asChild key={country} className="p-0">
-                        <button
-                          onClick={() =>
-                            setSelectedCountry((prev) =>
-                              prev === country ? null : country
-                            )
-                          }
-                          className={`
-                            px-3 py-1 text-sm rounded-full
-                            ${
-                              isSelected
-                                ? "bg-green-300 text-black font-bold"
-                                : "bg-gray-100 hover:bg-gray-200 text-gray-700"
-                            }
-                          `}
-                        >
-                          {country}
-                        </button>
-                      </DropdownMenuItem>
-                    );
-                  })}
+                  {countryOptions.map((country) => (
+                    <DropdownMenuItem asChild key={country}>
+                      <button
+                        onClick={() =>
+                          setSelectedCountry((prev) =>
+                            prev === country ? null : country
+                          )
+                        }
+                        className={`px-3 py-1 text-sm rounded-full ${
+                          selectedCountry === country
+                            ? "bg-green-300 text-black font-bold"
+                            : "bg-gray-100 hover:bg-gray-200 text-gray-700"
+                        }`}
+                      >
+                        {country}
+                      </button>
+                    </DropdownMenuItem>
+                  ))}
                 </div>
               </DropdownMenuContent>
             </DropdownMenu>
-
-            {/* Reset Filters (shadcn/ui Button) */}
             <Button
               variant="outline"
               onClick={handleResetFilters}
@@ -227,7 +178,6 @@ export default function GymsTrainingClient({
           </div>
         </div>
 
-        {/* Grid of Gyms */}
         {filteredGyms.length === 0 ? (
           <div className="text-center mt-8 text-white/80">
             No gyms match your criteria.
@@ -239,36 +189,26 @@ export default function GymsTrainingClient({
                 key={gym.id}
                 className="rounded-xl overflow-hidden shadow-md bg-white text-black"
               >
-                {/* Image area: fixed height, object-cover */}
                 <div className="relative w-full h-48 bg-gray-300">
-                  {gym.thumb ? (
-                    <Image
-                      src={gym.thumb}
-                      alt={gym.store}
-                      fill
-                      className="object-cover"
-                    />
-                  ) : (
-                    <Image
-                      src="/placeholder_1.jpg"
-                      alt={gym.store}
-                      fill
-                      className="object-cover"
-                    />
-                  )}
+                  <Image
+                    src={gym.thumb || "/placeholder_1.jpg"}
+                    alt={gym.store}
+                    fill
+                    className="object-cover"
+                  />
                 </div>
-
-                {/* Info */}
                 <div className="p-4 text-left">
                   <h3 className="text-lg font-bold mb-1">{gym.store}</h3>
-                  {gym.address && (
-                    <p className="text-sm text-gray-800 mb-2">{gym.address}</p>
-                  )}
-                  {(gym.city || gym.country) && (
-                    <p className="text-xs text-gray-600">
-                      {[gym.city, gym.country].filter(Boolean).join(", ")}
-                    </p>
-                  )}
+                  <p className="text-sm text-gray-800 mb-2">{gym.address}</p>
+                  <p className="text-xs text-gray-600">
+                    {[gym.city, gym.country].filter(Boolean).join(", ")}
+                  </p>
+                  <Link
+                    href={`/centers/${gym.slug}`}
+                    className="font-semibold text-pink-400 hover:underline"
+                  >
+                    View Center
+                  </Link>
                 </div>
               </div>
             ))}
