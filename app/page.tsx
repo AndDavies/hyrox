@@ -6,7 +6,6 @@ import { createClient } from "@supabase/supabase-js"
 import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
 import Footer from "./components/Footer";
-import { Accordion } from "@/components/ui/accordion";
 import FAQSection from "./components/FAQSection";
 
 
